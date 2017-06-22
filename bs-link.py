@@ -32,11 +32,6 @@ def get_shopurl_list(url):
         # 次の20件へのリンクを取得
         soup2 = BeautifulSoup(res2, "html.parser")
         ln = soup2.find("a", attrs={"class": "page-move__target--next"})
-        # 暫定で全2ページ分だけ取得
-        cnt += 1
-        if cnt >= 1:
-            break
-        # 暫定ここまで
         if ln == None:
             # 最終ページに到達したら終了
             break
@@ -97,11 +92,6 @@ def get_kuchikomiurl(url):
                 # 次の20件へのリンクを取得
                 soup2 = BeautifulSoup(res2, "html.parser")
                 ln = soup2.find("a", attrs={"class": "page-move__target--next"})
-                # 暫定で全3ページ分だけ取得
-                cnt += 1
-                if cnt >= 1:
-                    break
-                # 暫定ここまで
                 if ln == None:
                     # 最終ページに到達したら終了
                     break
