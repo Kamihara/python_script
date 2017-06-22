@@ -62,46 +62,51 @@ def get_shopbaseinfo(urllist):
 def get_kuchikomiurl(url):
     cnt = 0
     kuchikomiurl_list = []
-    for u in url:
-        kuchikomipage_url = u + "dtlrvwlst/"
-        while(True):
-            print(kuchikomipage_url)
-            # 一覧ページ内のurl20件を取得する
-            try:
-                res1 = req.urlopen(kuchikomipage_url)
-            except Exception as e:
-                print(e)
-                break
 
-            time.sleep(3)
-            soup = BeautifulSoup(res1, "html.parser")
-            kuchikomi_list = soup.find_all("a", attrs={"class": "rvw-item__title-target"})
+    # 店舗クチコミURLをファイルへ出力
+    with open('kuchikomiurllist.txt', 'w') as f:
+        for u in url:
+            kuchikomipage_url = u + "dtlrvwlst/"
+            while(True):
+                print(kuchikomipage_url)
+                # 一覧ページ内のurl20件を取得する
+                try:
+                    res1 = req.urlopen(kuchikomipage_url)
+                except Exception as e:
+                    print(e)
+                    break
 
-            for kuchikomi in kuchikomi_list:
-                kuchikomi_url = kuchikomi.attrs['href']
-                kuchikomiurl_list.append(urljoin(u, kuchikomi_url))
-                print(urljoin(u, kuchikomi_url))
+                time.sleep(3)
+                soup = BeautifulSoup(res1, "html.parser")
+                kuchikomi_list = soup.find_all("a", attrs={"class": "rvw-item__title-target"})
 
-            # 次の20件ページを取得する
-            try:
-                res2 = req.urlopen(kuchikomipage_url)
-            except Exception as e:
-                print(e)
-                break
+                for kuchikomi in kuchikomi_list:
+                    kuchikomi_url = kuchikomi.attrs['href']
+                    kurl = urljoin(u, kuchikomi_url)
+                    kuchikomiurl_list.append(kurl)
+                    f.write(kurl + '\n')
+                    print(kurl)
 
-            # 次の20件へのリンクを取得
-            soup2 = BeautifulSoup(res2, "html.parser")
-            ln = soup2.find("a", attrs={"class": "page-move__target--next"})
-            # 暫定で全3ページ分だけ取得
-            cnt += 1
-            if cnt >= 1:
-                break
-            # 暫定ここまで
-            if ln == None:
-                # 最終ページに到達したら終了
-                break
-            else:
-                kuchikomipage_url = urljoin(u, ln.attrs['href'])
+                # 次の20件ページを取得する
+                try:
+                    res2 = req.urlopen(kuchikomipage_url)
+                except Exception as e:
+                    print(e)
+                    break
+
+                # 次の20件へのリンクを取得
+                soup2 = BeautifulSoup(res2, "html.parser")
+                ln = soup2.find("a", attrs={"class": "page-move__target--next"})
+                # 暫定で全3ページ分だけ取得
+                cnt += 1
+                if cnt >= 1:
+                    break
+                # 暫定ここまで
+                if ln == None:
+                    # 最終ページに到達したら終了
+                    break
+                else:
+                    kuchikomipage_url = urljoin(u, ln.attrs['href'])
 
     return kuchikomiurl_list
 
@@ -109,26 +114,31 @@ def get_kuchikomiurl(url):
 # クチコミ情報の取得
 def get_kuchikomi_info(urllist):
     kuchikomiinfo_list = []
-    for url in urllist:
-        img = []
-        res = req.urlopen(url)
-        time.sleep(3)
-        soup = BeautifulSoup(res, "html.parser")
+    with open('kuchikomiinfolist.csv', 'w') as c:
+        csvwriter = csv.writer(c)
 
-        shopname = soup.find("span", attrs={"class": "rstdtl-crumb"})
-        kuchikomi_title = soup.find("p", attrs={"class": "rvw-item__title"})
-        kuchikomi_text = soup.find("div", attrs={"class": "rvw-item__rvw-comment"})
-        kuchikomi_img = soup.find_all("div", attrs={"class": "rvw-photo__list-img"})
+        for url in urllist:
+            img = []
+            res = req.urlopen(url)
+            time.sleep(3)
+            soup = BeautifulSoup(res, "html.parser")
 
-        name = shopname.text
-        title = kuchikomi_title.text
-        text = kuchikomi_text.text
-        for i in kuchikomi_img:
-            imgurl = i.a.get('href')
-            img.append(imgurl)
+            shopname = soup.find("span", attrs={"class": "rstdtl-crumb"})
+            kuchikomi_title = soup.find("p", attrs={"class": "rvw-item__title"})
+            kuchikomi_text = soup.find("div", attrs={"class": "rvw-item__rvw-comment"})
+            kuchikomi_img = soup.find_all("div", attrs={"class": "rvw-photo__list-img"})
 
-        kuchikomiinfo_list.append([url, name, title, text, img])
-        print(text)
+            name = shopname.text
+            title = kuchikomi_title.text
+            text = kuchikomi_text.text
+            for i in kuchikomi_img:
+                imgurl = i.a.get('href')
+                img.append(imgurl)
+
+            kuchikomiinfo_list.append([url, name, title, text, img])
+            csvwriter.writerow([url, name, title, text, img])
+            print(text)
+
     return kuchikomiinfo_list
 
 ################################################################
@@ -165,10 +175,6 @@ if __name__ == "__main__":
     # 店舗クチコミURL全件取得
     kuchikomiurllist = get_kuchikomiurl(shopurllist)
 
-    # 店舗クチコミURLをファイルへ出力
-    with open('kuchikomiurllist.txt', 'w') as f:
-        for url in kuchikomiurllist:
-            f.write(url + '\n')
 
     # 店舗クチコミ情報取得
     kuchikomiinfolist = get_kuchikomi_info(kuchikomiurllist)
@@ -177,7 +183,3 @@ if __name__ == "__main__":
     with open('kuchikomiinfolist.txt', 'w') as f:
         for info in kuchikomiinfolist:
             f.write(str(info) + '\n')
-
-    with open('kuchikomiinfolist.csv', 'w') as c:
-        csvwriter = csv.writer(c)
-        csvwriter.writerow(kuchikomiinfolist)
