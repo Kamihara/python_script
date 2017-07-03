@@ -9,6 +9,7 @@ import sys
 import os
 import commands
 import csv
+import shutil
 
 #
 # 関数定義
@@ -45,8 +46,10 @@ def get_snd_history():
                 snd_uniqlist.append(row)
         
     # 重複排除したものをcsvファイルへ
+    header = ['FILEID', 'START DAY', 'START TIME', 'END TIME', 'RECORDS']
     with open("/BP/UNY020/SAP_snd_history.csv", "w") as f:
         writer = csv.writer(f, lineterminator='\n')
+        writer.writerow(header)
         for line in snd_uniqlist:
             writer.writerow(line)
 
@@ -82,12 +85,12 @@ def get_rcv_history():
                 rcv_uniqlist.append(row)
         
     # 重複排除したものをcsvファイルへ
+    header = ['FILEID', 'START DAY', 'START TIME', 'END TIME', 'RECORDS']
     with open("/BP/UNY020/SAP_rcv_history.csv", "w") as f:
         writer = csv.writer(f, lineterminator='\n')
+        writer.writerow(header)
         for line in rcv_uniqlist:
             writer.writerow(line)
-
-
 
 #
 # メイン処理
