@@ -34,7 +34,8 @@ if __name__ == "__main__":
     with open('shopinfolist.txt', 'r') as f:
         reader = csv.reader(f)
 
+        for r in reader:
+            print(type(r))
+            print(r)
 
-
-    print(reader)
     print_shopinfo(reader[0])
