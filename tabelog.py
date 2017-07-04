@@ -104,7 +104,7 @@ def get_kuchikomiurl(url):
 # クチコミ情報の取得
 def get_kuchikomi_info(urllist):
     kuchikomiinfo_list = []
-    with open('kuchikomiinfolist2.csv', 'w') as c:
+    with open('kuchikomiinfolist.csv', 'w') as c:
         csvwriter = csv.writer(c)
 
         for url in urllist:
@@ -165,10 +165,11 @@ if __name__ == "__main__":
     # 店舗クチコミURL全件取得
     kuchikomiurllist = get_kuchikomiurl(shopurllist)
 
+
     # 店舗クチコミ情報取得
     kuchikomiinfolist = get_kuchikomi_info(kuchikomiurllist)
 
     # 店舗クチコミ情報をファイルへ出力
-    with open('kuchikomiinfolist2.txt', 'w') as f:
+    with open('kuchikomiinfolist.txt', 'w') as f:
         for info in kuchikomiinfolist:
             f.write(str(info) + '\n')
