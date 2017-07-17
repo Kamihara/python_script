@@ -36,8 +36,8 @@ if __name__ == "__main__":
 
     with open('shopurllist.csv', 'r') as ci:
         csvreader = csv.reader(ci)
-        for csv in csvreader:
-            for c in csv:
+        for line in csvreader:
+            for c in line:
                 shopurllist.append(c)
 
     # 店舗基本情報取得
@@ -49,6 +49,6 @@ if __name__ == "__main__":
             f.write(str(info) + '\n')
 
     with open('shopinfolist.csv', 'w') as co:
-        csvwriter = csv.writer(co)
+        csvwriter = csv.writer(co, lineterminator='\n')
         for line in shopinfolist:
             csvwriter.writerow(line)
