@@ -23,23 +23,40 @@ class TabelogHtmlGetter:
 
         return "".join([elm.get_text().strip() for elm in elements])
 
-    def get_rstinfo(self):
+    def get_rstinfo_titles(self):
+        titles = []
         tables = self.soup.find_all("table", attrs={"class": "rstinfo-table__table"})
-        cells = []
-        header = []
-        for table in tables:
-            rows = table.find_all('tr')
-            for row in rows:
-                for cell in row.find_all('th'):
-                    header.append(cell.get_text().replace('\n', '').replace(' ', ''))
-                    continue
 
         for table in tables:
-            rows = table.find_all('tr')
-            for row in rows:
-                for cell in row.find_all('td'):
-                    cells.append(cell.get_text().replace('\n', '').replace(' ', ''))
-        return header + cells
+            columns = table.find_all('th')
+            for col in columns:
+                titles.append(col.get_text().replace('\n', '').replace(' ', ''))
+
+        return titles
+
+    def get_rstinfo(self, column):
+        row = []
+        tables = self.soup.find_all("table", attrs={"class": "rstinfo-table__table"})
+
+        for col in column:
+            flg_hit = False
+
+            for table in tables:
+                tr_all = table.find_all('tr')
+
+                for tr in tr_all:
+                    th = tr.find('th').get_text()
+
+                    if col == th:
+                        row.append(tr.find('td').get_text().replace('\n', '').replace(' ', ''))
+                        flg_hit = True
+                    else:
+                        continue
+
+            if flg_hit == False:
+                row.append("no data")
+
+        return row
 
     def __get_text(self, selector):
         elements = self.soup.select(selector)
@@ -79,12 +96,26 @@ def get_html(url):
 if __name__ == "__main__":
 
     html_list = glob.glob('shops/*')
+    uniq_col = []
+    rows = []
+
+    for h in html_list:
+        html = TabelogHtmlGetter(h)
+        titles = html.get_rstinfo_titles()
+        for t in titles:
+            if t not in uniq_col:
+                uniq_col.append(t)
+
+    with open('shops/shop_info_title.csv', 'a') as c:
+        cw = csv.writer(c, delimiter='\t')
+        cw.writerow(uniq_col)
 
     for h in html_list:
         html = TabelogHtmlGetter(h)
         with open('shops/shop_info.csv', 'a') as c:
             cw = csv.writer(c, delimiter='\t')
-            cw.writerow(html.get_rstinfo())
+            cw.writerow(html.get_rstinfo(uniq_col))
+
         # print(html.get_rstinfo())
         # data = pd.DataFrame(html.get_rstinfo())
         # data.to_csv('shop_info.csv', sep='\t')
