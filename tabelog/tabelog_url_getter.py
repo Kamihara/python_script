@@ -13,12 +13,11 @@ from urllib.parse import urljoin
 ################################################################
 # 店舗URLリストの取得
 def get_shopurl_list(url):
-    cnt = 0
     shopurl_list = []
     while(True):
         # 一覧ページ内のurl20件を取得する
         res1 = req.urlopen(url)
-        time.sleep(3)
+        time.sleep(1)
         soup = BeautifulSoup(res1, "html.parser")
         shoplist = soup.find_all("a", attrs={"class": "list-rst__rst-name-target"})
 
@@ -40,21 +39,8 @@ def get_shopurl_list(url):
 
     return shopurl_list
 
-# 店舗基本情報の取得
-def get_shopbaseinfo(urllist):
-    shopinfo_list = []
-    for url in urllist:
-        time.sleep(3)
-        res = req.urlopen(url)
-        soup = BeautifulSoup(res, "html.parser")
-        shopbaseinfo = soup.find("script", attrs={"type": "application/ld+json"})
-        shopbaseinfo_json = shopbaseinfo.string.strip()
-        shopinfo_list.append([url, shopbaseinfo_json])
-        print(shopbaseinfo_json)
-    return shopinfo_list
-
 # クチコミURLリストの取得
-def get_kuchikomiurl(url):
+def get_kuchikomiurl_list(url):
     kuchikomiurl_list = []
 
     # 店舗クチコミURLをファイルへ出力
@@ -70,7 +56,7 @@ def get_kuchikomiurl(url):
                     print(e)
                     break
 
-                time.sleep(3)
+                time.sleep(1)
                 soup = BeautifulSoup(res1, "html.parser")
                 kuchikomi_list = soup.find_all("a", attrs={"class": "rvw-item__title-target"})
 
@@ -100,36 +86,6 @@ def get_kuchikomiurl(url):
     return kuchikomiurl_list
 
 
-# クチコミ情報の取得
-def get_kuchikomi_info(urllist):
-    kuchikomiinfo_list = []
-    with open('kuchikomiinfolist.csv', 'w') as c:
-        csvwriter = csv.writer(c)
-
-        for url in urllist:
-            img = []
-            res = req.urlopen(url)
-            time.sleep(3)
-            soup = BeautifulSoup(res, "html.parser")
-
-            shopname = soup.find("span", attrs={"class": "rstdtl-crumb"})
-            kuchikomi_title = soup.find("p", attrs={"class": "rvw-item__title"})
-            kuchikomi_text = soup.find("div", attrs={"class": "rvw-item__rvw-comment"})
-            kuchikomi_img = soup.find_all("div", attrs={"class": "rvw-photo__list-img"})
-
-            name = shopname.text
-            title = kuchikomi_title.text
-            text = kuchikomi_text.text
-            for i in kuchikomi_img:
-                imgurl = i.a.get('href')
-                img.append(imgurl)
-
-            kuchikomiinfo_list.append([url, name, title, text, img])
-            csvwriter.writerow([url, name, title, text, img])
-            print(text)
-
-    return kuchikomiinfo_list
-
 ################################################################
 # メイン処理
 ################################################################
@@ -139,36 +95,21 @@ if __name__ == "__main__":
     pgname = args[0]
     # 一覧ページの1ページ目
     url = args[1]
-    #url = "https://tabelog.com/tokyo/A1315/A131501/R1644/rstLst/?vs=1&sa=%E5%A4%A7%E4%BA%95%E7%94%BA%E9%A7%85&sk=&lid=hd_search1&vac_net=&svd=20170612&svt=2400&svps=2&hfc=1&sw="
+    dir = args[2]
 
     # 店舗URL全件取得
-    shopurllist = get_shopurl_list(url)
+    shopurl_list = get_shopurl_list(url)
 
     # 店舗URLをファイルへ出力
-    with open('shopurllist.txt', 'w') as f:
-        for url in shopurllist:
-            f.write(url + '\n')
-
-    with open('shopurllist.csv', 'w') as c:
-        csvwriter = csv.writer(c)
-        csvwriter.writerow(shopurllist)
-
-    # 店舗基本情報取得
-    shopinfolist = get_shopbaseinfo(shopurllist)
-
-    # 店舗基本情報をファイルへ出力
-    with open('shopinfolist.txt', 'w') as f:
-        for info in shopinfolist:
-            f.write(str(info) + '\n')
+    with open(dir + '/shopurl_list.csv', 'w') as c:
+        cw = csv.writer(c)
+        cw.writerow(shopurl_list)
 
     # 店舗クチコミURL全件取得
-    kuchikomiurllist = get_kuchikomiurl(shopurllist)
+    kuchikomiurl_list = get_kuchikomiurl_list(shopurl_list)
 
 
-    # 店舗クチコミ情報取得
-    kuchikomiinfolist = get_kuchikomi_info(kuchikomiurllist)
-
-    # 店舗クチコミ情報をファイルへ出力
-    with open('kuchikomiinfolist.txt', 'w') as f:
-        for info in kuchikomiinfolist:
-            f.write(str(info) + '\n')
+    # 店舗URLをファイルへ出力
+    with open(dir + '/kuchikomiurl_list.csv', 'w') as c:
+        cw = csv.writer(c)
+        cw.writerow(kuchikomiurl_list)
