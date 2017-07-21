@@ -75,6 +75,7 @@ if __name__ == "__main__":
     for h in html_list:
         html = TabelogDataGetter(h)
         titles = html.get_rstinfo_titles()
+        print(h)
         for t in titles:
             if t not in uniq_col:
                 uniq_col.append(t)
@@ -85,6 +86,7 @@ if __name__ == "__main__":
 
     for h in html_list:
         html = TabelogDataGetter(h)
+        print(h)
         with open(dir + '/shop_info.csv', 'a') as c:
             cw = csv.writer(c, delimiter='\t')
             cw.writerow(html.get_rstinfo(uniq_col))

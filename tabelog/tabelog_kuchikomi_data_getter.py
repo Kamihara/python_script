@@ -2,9 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 import glob
 import csv
+import sys
 
 
-class TabelogKuchikomiHtmlGetter:
+class TabelogKuchikomiDataGetter:
     def __init__(self, html):
         h = open(html).read()
         self.soup = BeautifulSoup(h, "lxml")
@@ -105,35 +106,13 @@ class TabelogKuchikomiHtmlGetter:
         element = elements[0]
         return element.get_text().strip()
 
-def get_html(url):
-    r = requests.get(url)
-    return r.text
-
-# if __name__ == "__main__":
-#
-#     shop_urls = list(open("kuchikomiurllist.txt"))
-#     for url in shop_urls:
-#         print(url)
-#         html = get_html(url)
-#         f = open("kuchikomi/{0}.html".format(url.split('/')[-2]), "w")
-#         f.write(html)
-#         time.sleep(1)
-#     # html = get_html("https://tabelog.com/tokyo/A1315/A131501/13196426/")
-#     # f = open("tabelog.html", "w")
-#     # f.write(html)
-#     # html = open("tabelog.html").read()
-#
-#     # data = TabelogDataGetter(html)
-#     # print(data.get_name())
-#     # print(data.get_tel())
-#     # print(data.get_address())
-
-
 if __name__ == "__main__":
 
-    html_list = glob.glob('kuchikomi/*')
+    args = sys.argv
+    dir = args[1]
+    html_list = glob.glob(dir + '/kuchikomi/*')
 
-    with open('kuchikomi/kuchikomi_info.csv', 'a') as c:
+    with open(dir + '/kuchikomi_info.csv', 'a') as c:
         cw = csv.writer(c, delimiter='\t')
         header = ['shop_name',
                   'kuchikomi_title',
@@ -160,7 +139,7 @@ if __name__ == "__main__":
 
         for h in html_list:
             l = []
-            html = TabelogKuchikomiHtmlGetter(h)
+            html = TabelogKuchikomiDataGetter(h)
             print(h)
 
             shop_name = html.get_name()
