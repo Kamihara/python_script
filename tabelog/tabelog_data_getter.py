@@ -21,6 +21,23 @@ class TabelogDataGetter:
 
         return "".join([elm.get_text().strip() for elm in elements])
 
+    def get_shop_score(self):
+        return self.__get_text(".rdheader-rating__score-val")
+
+    def get_shop_dinner_score(self):
+        elements = self.soup.select(".rdheader-rating__time-icon--dinner em")
+        if not elements:
+            return 0
+
+        return elements[0].get_text()
+
+    def get_shop_lunch_score(self):
+        elements = self.soup.select(".rdheader-rating__time-icon--lunch em")
+        if elements[0].get_text() == "-":
+            return 0
+
+        return elements[0].get_text()
+
     def get_rstinfo_titles(self):
         titles = []
         tables = self.soup.find_all("table", attrs={"class": "rstinfo-table__table"})
@@ -69,24 +86,34 @@ if __name__ == "__main__":
     args = sys.argv
     dir = args[1]
     html_list = glob.glob(dir + '/shops/*')
-    uniq_col = []
+    header = []
     rows = []
 
+    # 基本情報エリアから取得したい情報を指定する
     for h in html_list:
         html = TabelogDataGetter(h)
         titles = html.get_rstinfo_titles()
         print(h)
         for t in titles:
-            if t not in uniq_col:
-                uniq_col.append(t)
+            if t not in header:
+                header.append(t)
+
+    header.append("shop_score")
+    header.append("shop_dinner_score")
+    header.append("shop_lunch_score")
 
     with open(dir + '/shop_info_title.csv', 'a') as c:
         cw = csv.writer(c, delimiter='\t')
-        cw.writerow(uniq_col)
+        cw.writerow(header)
 
     for h in html_list:
         html = TabelogDataGetter(h)
+        row = []
         print(h)
         with open(dir + '/shop_info.csv', 'a') as c:
             cw = csv.writer(c, delimiter='\t')
-            cw.writerow(html.get_rstinfo(uniq_col))
+            row = html.get_rstinfo(header)
+            row.append(html.get_shop_score())
+            row.append(html.get_shop_dinner_score())
+            row.append(html.get_shop_lunch_score())
+            cw.writerow(row)
