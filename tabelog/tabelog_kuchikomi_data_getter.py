@@ -14,10 +14,10 @@ class TabelogKuchikomiDataGetter:
         return self.__get_text(".display-name")
 
     def get_kuchikomi_title(self):
-        return self.__get_text(".rvw-item__title").replace('\n','')
+        return self.__get_text(".rvw-item__title")
 
     def get_kuchikomi_text(self):
-        text = self.__get_text(".rvw-item__rvw-comment").replace('\n','')
+        text = self.__get_text(".rvw-item__rvw-comment")
         return text.replace('\\', '￥')
 
     def get_kuchikomi_img(self):
@@ -31,10 +31,10 @@ class TabelogKuchikomiDataGetter:
         return self.__get_text(".rdheader-rating__score-val")
 
     def get_shop_dinner_score(self):
-        return self.__get_text(".rdheader-rating__time-icon--dinner").replace('夜の点数：\n','')
+        return self.__get_text(".rdheader-rating__time-icon--dinner").replace('夜の点数：','')
 
     def get_shop_lunch_score(self):
-        return self.__get_text(".rdheader-rating__time-icon--lunch").replace('昼の点数：\n','')
+        return self.__get_text(".rdheader-rating__time-icon--lunch").replace('昼の点数：','')
 
     def get_personal_dinner_score(self):
         exist_check = self.soup.select(".rvw-item__ratings-item")
@@ -104,7 +104,7 @@ class TabelogKuchikomiDataGetter:
             return None
 
         element = elements[0]
-        return element.get_text().strip()
+        return element.get_text().strip().replace('\n','')
 
 if __name__ == "__main__":
 
