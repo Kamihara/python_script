@@ -14,7 +14,10 @@ class TabelogKuchikomiDataGetter:
         return self.__get_text(".display-name")
 
     def get_kuchikomi_title(self):
-        return self.__get_text(".rvw-item__title")
+        try:
+            return self.__get_text(".rvw-item__title")
+        except:
+            return "no data"
 
     def get_kuchikomi_text(self):
         text = self.__get_text(".rvw-item__rvw-comment")
