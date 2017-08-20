@@ -17,7 +17,7 @@ def get_shopurl_list(url):
     while(True):
         # 一覧ページ内のurl20件を取得する
         res1 = req.urlopen(url)
-        time.sleep(1)
+        time.sleep(5)
         soup = BeautifulSoup(res1, "html.parser")
         shoplist = soup.find_all("a", attrs={"class": "list-rst__rst-name-target"})
 
@@ -56,7 +56,7 @@ def get_kuchikomiurl_list(url):
                     print(e)
                     break
 
-                time.sleep(1)
+                time.sleep(5)
                 soup = BeautifulSoup(res1, "html.parser")
                 kuchikomi_list = soup.find_all("a", attrs={"class": "rvw-item__title-target"})
 

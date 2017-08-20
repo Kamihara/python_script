@@ -19,4 +19,4 @@ if __name__ == "__main__":
                 html = get_html(url)
                 f = open(dir + "/kuchikomi/{0}.html".format(url.split('/')[-2]), "w")
                 f.write(html)
-                time.sleep(5)
+                time.sleep(30)
