@@ -10,7 +10,8 @@ def pg_searcher(pgname):
 
     jcl_lib = []
     jcl_lib.append("/export/home/bp/jcl")
-    jcl_lib.append("/export/home/bpp/bpw00/YHG/jcl")
+    jcl_lib.append("/export/home/bp/unyou1/jcl")
+    jcl_lib.append("/export/home/bpp/bpw00/*/jcl")
 
     for lib in jcl_lib:
         jcl_list = glob.glob(lib + '/*')
@@ -18,7 +19,7 @@ def pg_searcher(pgname):
             try:
                 with open(jcl, "r") as j:
                     for line in j:
-                        if line.find("exec " + pgname) >= 0:
+                        if line.find("exec " + pgname + " ") >= 0:
                             result.append(jcl)
             except Exception as e:
                 print(str(e))
