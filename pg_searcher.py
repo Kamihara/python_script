@@ -19,7 +19,7 @@ def pg_searcher(pgname):
             try:
                 with open(jcl, "r") as j:
                     for line in j:
-                        if line.find("exec " + pgname + " ") >= 0:
+                        if line.find("exec " + pgname + " ") >= 0 and not line[0:2] == "*#":
                             result.append(jcl)
             except Exception as e:
                 print(str(e))

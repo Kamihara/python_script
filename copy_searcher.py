@@ -18,7 +18,7 @@ def copy_searcher(pgname):
             try:
                 with open(pg, "r") as p:
                     for line in p:
-                        if line.find("COPY ") >= 0 and not line[6] == '*':
+                        if line.find("COPY ") >= 0 and not line[6] == '*' and line.find("BPU2X") < 0:
                             copy = line.split()
                             result.append(copy[2].replace('.', ''))
                             result.append(line.replace('\n', ''))
