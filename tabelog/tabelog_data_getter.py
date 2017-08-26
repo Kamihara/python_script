@@ -120,7 +120,7 @@ if __name__ == "__main__":
             l.append(genre)
 
             # reservation varchar(255) null, -- 予約
-            reservation = html.get_rstinfo("予約・")
+            reservation = html.get_rstinfo("予約・お問い合わせ")
             l.append(reservation)
 
             # reservation_availability varchar(255) null, -- 予約可否
@@ -146,7 +146,7 @@ if __name__ == "__main__":
             # budget_from_user varchar(255) null, -- 予算（ユーザ）
             # budget_from_user = html.get_rstinfo("予算（ユーザーより）")
             budget_from_user = html.get_rstinfo("予算（口コミ集計）")
-            l.append(budget_from_user)
+            l.append(budget_from_user.replace("予算分布を見る", ""))
 
             # card varchar(255) null, -- カード
             card = html.get_rstinfo("カード")
@@ -230,7 +230,7 @@ if __name__ == "__main__":
 
             # budget_from_shop varchar(255) null, -- 予算（店舗）
             budget_from_shop = html.get_rstinfo("予算")
-            l.append(budget_from_shop)
+            l.append(budget_from_shop.replace("予算分布を見る", ""))
 
             # child_accompanied varchar(255) null, -- 子供連れ
             child_accompanied = html.get_rstinfo("お子様同伴")
