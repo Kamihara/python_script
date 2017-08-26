@@ -64,7 +64,7 @@ class TabelogDataGetter:
 
                 if search_word == th:
                     val = tr.find('td').get_text()
-                    return val.replace('\n', '').replace(' ', '')
+                    return val.replace('\n', '').replace(' ', '').replace('\t', '')
                 else:
                     continue
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
             l.append(genre)
 
             # reservation varchar(255) null, -- 予約
-            reservation = html.get_rstinfo("予約・お問い合わせ")
+            reservation = html.get_rstinfo("予約・")
             l.append(reservation)
 
             # reservation_availability varchar(255) null, -- 予約可否
@@ -144,6 +144,7 @@ if __name__ == "__main__":
             l.append(regular_holiday)
 
             # budget_from_user varchar(255) null, -- 予算（ユーザ）
+            # budget_from_user = html.get_rstinfo("予算（ユーザーより）")
             budget_from_user = html.get_rstinfo("予算（口コミ集計）")
             l.append(budget_from_user)
 
@@ -173,7 +174,7 @@ if __name__ == "__main__":
 
             # scene varchar(255) null, -- 利用シーン
             scene = html.get_rstinfo("利用シーン")
-            l.append(scene)
+            l.append(scene.replace("こんな時によく使われます。", ""))
 
             # service varchar(255) null, -- サービス
             service = html.get_rstinfo("サービス")
@@ -262,5 +263,9 @@ if __name__ == "__main__":
             # dress_code varchar(255) null, -- ドレスコード
             dress_code = html.get_rstinfo("ドレスコード")
             l.append(dress_code)
+
+            # id  int(11) -- id
+            id = 0
+            l.append(id)
 
             cw.writerow(l)
