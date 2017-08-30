@@ -5,7 +5,7 @@ import os
 import glob
 import csv
 
-class Cobol:
+class CobolFile:
     def __init__(self, path):
         self.path = path                        # /export/home/bp/cobol/main/src/SAMPLE.cob
 
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
         for c in cr:
             for pg_path in c:
-                cob = Cobol(pg_path)
+                cob = CobolFile(pg_path)
                 l = []
                 l.append(cob.basename())
                 for copy in cob.search_using_copy():
