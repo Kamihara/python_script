@@ -5,7 +5,7 @@ import os
 import glob
 import csv
 
-class CobolFile:
+class CobolAnalyzer:
     def __init__(self, path):
         self.path = path                        # /export/home/bp/cobol/main/src/SAMPLE.cob
 
@@ -19,7 +19,7 @@ class CobolFile:
         ### 本番機向け
         # 該当プログラムがアサインされているjclを検索し、
         # jclのフルパスをリスト形式で返却する。
-        
+
         result = []
 
         # 調査対象jclライブラリ
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
         for c in cr:
             for pg_path in c:
-                cob = CobolFile(pg_path)
+                cob = CobolAnalyzer(pg_path)
                 l = []
                 l.append(cob.basename())
                 for copy in cob.search_using_copy():
