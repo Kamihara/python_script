@@ -158,27 +158,27 @@ if __name__ == "__main__":
             l.append(kuchikomi_img_list)
 
             shop_score = html.get_shop_score()
-            l.append(shop_score.replace('-','0.0'))
+            l.append(shop_score.replace('-', None))
 
             shop_lunch_score = html.get_shop_lunch_score()
-            l.append(shop_lunch_score.replace('-','0.0'))
+            l.append(shop_lunch_score.replace('-', None))
 
             shop_dinner_score = html.get_shop_dinner_score()
-            l.append(shop_dinner_score.replace('-','0.0'))
+            l.append(shop_dinner_score.replace('-', None))
 
             personal_lunch_score = html.get_personal_lunch_score()
-            l.append(personal_lunch_score.replace('-','0.0'))
+            l.append(personal_lunch_score.replace('-', None))
 
             personal_dinner_score = html.get_personal_dinner_score()
-            l.append(personal_dinner_score.replace('-','0.0'))
+            l.append(personal_dinner_score.replace('-', None))
 
             personal_lunch_detail_score_list = html.get_personal_lunch_detail_score()
             for score in personal_lunch_detail_score_list:
-                l.append(score.replace('-','0.0'))
+                l.append(score.replace('-', None))
 
             personal_dinner_detail_score_list = html.get_personal_dinner_detail_score()
             for score in personal_dinner_detail_score_list:
-                l.append(score.replace('-','0.0'))
+                l.append(score.replace('-', None))
 
             reviewer = html.get_reviewer()
             l.append(reviewer)
