@@ -30,7 +30,8 @@ def get_shopurl_list(url):
         res2 = req.urlopen(url)
         # 次の20件へのリンクを取得
         soup2 = BeautifulSoup(res2, "html.parser")
-        ln = soup2.find("a", attrs={"class": "page-move__target--next"})
+        #ln = soup2.find("a", attrs={"class": "page-move__target--next"})
+        ln = soup2.find("a", attrs={"class": "c-pagination__arrow--next"})
         if ln == None:
             # 最終ページに到達したら終了
             break
@@ -76,7 +77,8 @@ def get_kuchikomiurl_list(url):
 
                 # 次の20件へのリンクを取得
                 soup2 = BeautifulSoup(res2, "html.parser")
-                ln = soup2.find("a", attrs={"class": "page-move__target--next"})
+                # ln = soup2.find("a", attrs={"class": "page-move__target--next"})
+                ln = soup2.find("a", attrs={"class": "c-pagination__arrow--next"})
                 if ln == None:
                     # 最終ページに到達したら終了
                     break
@@ -94,22 +96,27 @@ if __name__ == "__main__":
     num = len(args)
     pgname = args[0]
     # 一覧ページの1ページ目
-    url = args[1]
+    area_urllist = args[1]
     dir = args[2]
 
-    # 店舗URL全件取得
-    shopurl_list = get_shopurl_list(url)
+    f = open(area_urllist, "r")
+    lines = f.readlines()
+    f.close()
 
-    # 店舗URLをファイルへ出力
-    with open(dir + '/shopurl_list.csv', 'w') as c:
-        cw = csv.writer(c)
-        cw.writerow(shopurl_list)
+    for url in lines:
+        # 店舗URL全件取得
+        shopurl_list = get_shopurl_list(url)
 
-    # 店舗クチコミURL全件取得
-    kuchikomiurl_list = get_kuchikomiurl_list(shopurl_list)
+        # 店舗URLをファイルへ出力
+        with open(dir + '/shopurl_list.csv', 'a') as c:
+            cw = csv.writer(c, delimiter='\n')
+            cw.writerow(shopurl_list)
 
-
-    # 店舗URLをファイルへ出力
-    with open(dir + '/kuchikomiurl_list.csv', 'w') as c:
-        cw = csv.writer(c)
-        cw.writerow(kuchikomiurl_list)
+        # # 店舗クチコミURL全件取得
+        # kuchikomiurl_list = get_kuchikomiurl_list(shopurl_list)
+        #
+        #
+        # # 店舗URLをファイルへ出力
+        # with open(dir + '/kuchikomiurl_list.csv', 'a') as c:
+        #     cw = csv.writer(c, delimiter='\n')
+        #     cw.writerow(kuchikomiurl_list)
