@@ -8,10 +8,6 @@ def cos_sim(v1, v2):
     # コサイン類似度
     return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
 
-def euclidean_distance(v1, v2):
-    # ユークリッド距離
-    return np.linalg.norm(v1-v2)
-
 
 
 if __name__ == '__main__':
