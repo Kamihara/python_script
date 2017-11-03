@@ -51,10 +51,6 @@ if __name__ == "__main__":
         sql = "update oaiso_shop_test set links = \"" + link_list[1] + \
               "\" where shop_name = " + "\"" + link_list[0] + "\";\n"
 
-        # sql = "update tabelog_shop_info set URL = \"" + link_list[1] + \
-        #       "\" where shop_name = " + "\"" + link_list[0] + "\";\n"
-
         print(sql)
         f = open('./ooimachi/oaiso_shop_test_links_update.sql', 'a')
-        # f = open('./ooimachi/link_update.sql', 'a')
         f.write(sql)

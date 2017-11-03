@@ -21,6 +21,10 @@ class TabelogDataGetter:
 
         return "".join([elm.get_text().strip() for elm in elements])
 
+    def get_URL(self):
+        elements = self.soup.select(".display-name > a")
+        return elements[0].attrs['href']
+
     # def get_shop_score(self):
     #     return self.__get_text(".rdheader-rating__score-val")
     #
@@ -148,6 +152,28 @@ if __name__ == "__main__":
             budget_from_user = html.get_rstinfo("予算（口コミ集計）")
             l.append(budget_from_user.replace("予算分布を見る", ""))
 
+            # budget_from_user_night_min int null, -- 予算（ユーザ）
+            l.append("")
+            # budget_from_user_night_max int null, -- 予算（ユーザ）
+            l.append("")
+            # budget_from_user_lunch_min int null, -- 予算（ユーザ）
+            l.append("")
+            # budget_from_user_lunch_max int null, -- 予算（ユーザ）
+            l.append("")
+
+            # budget_from_shop varchar(255) null, -- 予算（店舗）
+            budget_from_shop = html.get_rstinfo("予算")
+            l.append(budget_from_shop.replace("予算分布を見る", ""))
+
+            # budget_from_shop_night_min int null, -- 予算（店舗）
+            l.append("")
+            # budget_from_shop_night_max int null, -- 予算（店舗）
+            l.append("")
+            # budget_from_shop_lunch_min int null, -- 予算（店舗）
+            l.append("")
+            # budget_from_shop_lunch_max int null, -- 予算（店舗）
+            l.append("")
+
             # card varchar(255) null, -- カード
             card = html.get_rstinfo("カード")
             l.append(card)
@@ -155,6 +181,9 @@ if __name__ == "__main__":
             # capacity varchar(255) null, -- 席数
             capacity = html.get_rstinfo("席数")
             l.append(capacity)
+
+            # capacity_number int null, -- 席数
+            l.append("")
 
             # private_room varchar(255) null, -- 個室
             private_room = html.get_rstinfo("個室")
@@ -228,10 +257,6 @@ if __name__ == "__main__":
             remark = html.get_rstinfo("備考")
             l.append(remark)
 
-            # budget_from_shop varchar(255) null, -- 予算（店舗）
-            budget_from_shop = html.get_rstinfo("予算")
-            l.append(budget_from_shop.replace("予算分布を見る", ""))
-
             # child_accompanied varchar(255) null, -- 子供連れ
             child_accompanied = html.get_rstinfo("お子様同伴")
             l.append(child_accompanied)
@@ -267,5 +292,18 @@ if __name__ == "__main__":
             # id  int(11) -- id
             id = 0
             l.append(id)
+
+            # latitude
+            l.append("")
+
+            # longtitude
+            l.append("")
+
+            # genre_oaiso
+            l.append("")
+
+            # URL
+            URL = html.get_URL()
+            l.append(URL)
 
             cw.writerow(l)
