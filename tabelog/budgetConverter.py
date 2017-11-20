@@ -8,7 +8,8 @@ if __name__ == "__main__":
     args = sys.argv
     data = []
 
-    with open('/Users/YoshitoKamihara/Documents/aiit/PBL/dev/analysis/shop_analysis_budget.tsv', 'r') as t:
+    # with open('/Users/YoshitoKamihara/Documents/aiit/PBL/dev/analysis/shop_analysis_budget.tsv', 'r') as t:
+    with open('/Users/YoshitoKamihara/Documents/aiit/PBL/dev/analysis/shop_analysis_budget_20171106.tsv', 'r') as t:
         cr = csv.reader(t, delimiter='\t')
         for row in cr:
             dict = {"budget_from_shop_night_min": "null",
@@ -196,7 +197,7 @@ if __name__ == "__main__":
 
     header = data[0].keys()
 
-    with open('./budgetConvert.tsv', 'a') as t:
+    with open('./budgetConvert_20171106.tsv', 'a') as t:
         cw = csv.DictWriter(t, header, delimiter='\t')
         header_row = {k: k for k in header}
         cw.writerow(header_row)
@@ -204,7 +205,7 @@ if __name__ == "__main__":
         for row in data:
             cw.writerow(row)
 
-    with open('./budgetConvert.tsv', 'r') as t:
+    with open('./budgetConvert_20171106.tsv', 'r') as t:
         cr = csv.reader(t, delimiter='\t')
         for row in cr:
             sql = "update tabelog_shop_info set budget_from_shop_night_min = " + row[0] + \
@@ -218,5 +219,5 @@ if __name__ == "__main__":
                   " where id = " + row[8] + ";\n"
 
             print(sql)
-            f = open('./budgetConvert.sql', 'a')
+            f = open('./budgetConvert_20171106.sql', 'a')
             f.write(sql)

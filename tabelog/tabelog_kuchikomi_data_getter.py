@@ -19,6 +19,14 @@ class TabelogKuchikomiDataGetter:
         except:
             return "no data"
 
+    def get_shopURL(self):
+        elements = self.soup.select(".display-name > a")
+        return elements[0].attrs['href']
+
+    def get_reviewURL(self):
+        element = self.soup.find('link', {"rel":'canonical'})
+        return element.attrs['href']
+
     def get_kuchikomi_text(self):
         text = self.__get_text(".rvw-item__rvw-comment")
         return text.replace('\\', '￥')
@@ -137,55 +145,77 @@ if __name__ == "__main__":
                   'personal_dinner_cp_rate',
                   'personal_dinner_drink_rate',
                   'reviewer',
-                  'follower_count']
-        cw.writerow(header)
+                  'follower_count'
+                  'id',
+                  'likes',
+                  'shopURL',
+                  'reviewURL']
+        # cw.writerow(header)
 
         for h in html_list:
-            l = []
-            html = TabelogKuchikomiDataGetter(h)
-            print(h)
+            try:
+                l = []
+                html = TabelogKuchikomiDataGetter(h)
+                print(h)
 
-            shop_name = html.get_name()
-            l.append(shop_name)
+                shop_name = html.get_name()
+                l.append(shop_name)
 
-            kuchikomi_title = html.get_kuchikomi_title()
-            l.append(kuchikomi_title)
+                kuchikomi_title = html.get_kuchikomi_title()
+                l.append(kuchikomi_title)
 
-            kuchikomi_text = html.get_kuchikomi_text()
-            l.append(kuchikomi_text)
+                kuchikomi_text = html.get_kuchikomi_text()
+                l.append(kuchikomi_text)
 
-            kuchikomi_img_list = html.get_kuchikomi_img()
-            l.append(kuchikomi_img_list)
+                kuchikomi_img_list = html.get_kuchikomi_img()
+                l.append(kuchikomi_img_list)
 
-            shop_score = html.get_shop_score()
-            l.append(shop_score.replace('-', None))
+                shop_score = html.get_shop_score()
+                l.append(shop_score.replace('-', ''))
 
-            shop_lunch_score = html.get_shop_lunch_score()
-            l.append(shop_lunch_score.replace('-', None))
+                shop_lunch_score = html.get_shop_lunch_score()
+                l.append(shop_lunch_score.replace('-', ''))
 
-            shop_dinner_score = html.get_shop_dinner_score()
-            l.append(shop_dinner_score.replace('-', None))
+                shop_dinner_score = html.get_shop_dinner_score()
+                l.append(shop_dinner_score.replace('-', ''))
 
-            personal_lunch_score = html.get_personal_lunch_score()
-            l.append(personal_lunch_score.replace('-', None))
+                personal_lunch_score = html.get_personal_lunch_score()
+                l.append(personal_lunch_score.replace('-', ''))
 
-            personal_dinner_score = html.get_personal_dinner_score()
-            l.append(personal_dinner_score.replace('-', None))
+                personal_dinner_score = html.get_personal_dinner_score()
+                l.append(personal_dinner_score.replace('-', ''))
 
-            personal_lunch_detail_score_list = html.get_personal_lunch_detail_score()
-            for score in personal_lunch_detail_score_list:
-                l.append(score.replace('-', None))
+                personal_lunch_detail_score_list = html.get_personal_lunch_detail_score()
+                for score in personal_lunch_detail_score_list:
+                    l.append(score.replace('-', ''))
 
-            personal_dinner_detail_score_list = html.get_personal_dinner_detail_score()
-            for score in personal_dinner_detail_score_list:
-                l.append(score.replace('-', None))
+                personal_dinner_detail_score_list = html.get_personal_dinner_detail_score()
+                for score in personal_dinner_detail_score_list:
+                    l.append(score.replace('-', ''))
 
-            reviewer = html.get_reviewer()
-            l.append(reviewer)
+                reviewer = html.get_reviewer()
+                l.append(reviewer)
 
-            follower_count = html.get_follower_count()
-            l.append(follower_count)
+                follower_count = html.get_follower_count()
+                l.append(follower_count)
 
-            print(l)
+                id = 0
+                l.append(id)
 
-            cw.writerow(l)
+                likes = 0
+                l.append(likes)
+
+                shop_id = 0
+                l.append(id)
+
+                shopURL = html.get_shopURL()
+                l.append(shopURL)
+
+                reviewURL = html.get_reviewURL()
+                l.append(reviewURL)
+
+                print(l)
+
+                cw.writerow(l)
+            except:
+                continue

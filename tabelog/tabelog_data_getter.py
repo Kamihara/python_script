@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import glob
 import csv
 import sys
+import json
 
 class TabelogDataGetter:
     def __init__(self, html):
@@ -12,7 +13,7 @@ class TabelogDataGetter:
         return self.__get_text(".display-name")
 
     def get_tel(self):
-        return self.__get_text(".rstinfo-table__tel-num")
+        return self.__get_text(".rstdtl-side-yoyaku__tel-number")
 
     def get_address(self):
         elements = self.soup.select(".rstinfo-table__address span")
@@ -25,33 +26,26 @@ class TabelogDataGetter:
         elements = self.soup.select(".display-name > a")
         return elements[0].attrs['href']
 
-    # def get_shop_score(self):
-    #     return self.__get_text(".rdheader-rating__score-val")
-    #
-    # def get_shop_dinner_score(self):
-    #     elements = self.soup.select(".rdheader-rating__time-icon--dinner em")
-    #     if not elements:
-    #         return 0
-    #
-    #     return elements[0].get_text()
-    #
-    # def get_shop_lunch_score(self):
-    #     elements = self.soup.select(".rdheader-rating__time-icon--lunch em")
-    #     if elements[0].get_text() == "-":
-    #         return 0
-    #
-    #     return elements[0].get_text()
-    #
-    # def get_rstinfo_titles(self):
-    #     titles = []
-    #     tables = self.soup.find_all("table", attrs={"class": "rstinfo-table__table"})
-    #
-    #     for table in tables:
-    #         columns = table.find_all('th')
-    #         for col in columns:
-    #             titles.append(col.get_text().replace('\n', '').replace(' ', ''))
-    #
-    #     return titles
+    def get_shop_score(self):
+        return self.__get_text(".rdheader-rating__score-val-dtl")
+
+    def get_shop_dinner_score(self):
+        return self.__get_text(".rdheader-rating__time-icon--dinner").replace('夜の点数：','')
+
+    def get_shop_lunch_score(self):
+        return self.__get_text(".rdheader-rating__time-icon--lunch").replace('昼の点数：','')
+
+    def get_latitude(self):
+        j = self.soup.find("script", attrs={"type": "application/ld+json"})
+        json_str = j.get_text().strip()
+        json_dict = json.loads(json_str)
+        return json_dict['geo']['latitude']
+
+    def get_longitude(self):
+        j = self.soup.find("script", attrs={"type": "application/ld+json"})
+        json_str = j.get_text().strip()
+        json_dict = json.loads(json_str)
+        return json_dict['geo']['longitude']
 
     def get_rstinfo(self, search_word):
 
@@ -81,7 +75,7 @@ class TabelogDataGetter:
             return None
 
         element = elements[0]
-        return element.get_text().strip()
+        return element.get_text().strip().replace('\n','')
 
 
 if __name__ == "__main__":
@@ -282,7 +276,8 @@ if __name__ == "__main__":
             l.append(link)
 
             # tel varchar(255) null, -- 電話番号
-            tel = html.get_rstinfo("電話番号")
+            # tel = html.get_rstinfo("電話番号")
+            tel = html.get_tel()
             l.append(tel)
 
             # dress_code varchar(255) null, -- ドレスコード
@@ -294,10 +289,12 @@ if __name__ == "__main__":
             l.append(id)
 
             # latitude
-            l.append("")
+            lat = html.get_latitude()
+            l.append(lat)
 
-            # longtitude
-            l.append("")
+            # longitude
+            lng = html.get_longitude()
+            l.append(lng)
 
             # genre_oaiso
             l.append("")
@@ -305,5 +302,20 @@ if __name__ == "__main__":
             # URL
             URL = html.get_URL()
             l.append(URL)
+
+            # genre_oaiso_s
+            l.append("")
+
+            # shop_score
+            shop_score = html.get_shop_score()
+            l.append(shop_score.replace('-', ''))
+
+            # shop_lunch_score
+            shop_lunch_score = html.get_shop_lunch_score()
+            l.append(shop_lunch_score.replace('-', ''))
+
+            # shop_dinner_score
+            shop_dinner_score = html.get_shop_dinner_score()
+            l.append(shop_dinner_score.replace('-', ''))
 
             cw.writerow(l)

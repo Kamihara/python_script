@@ -36,23 +36,16 @@ def get_kuchikomiurl_list(url):
             kuchikomiurl_list.append(full_url)
             print(full_url)
 
-        # # 次の20件ページを取得する
-        # try:
-        #     res2 = req.urlopen(kuchikomipage_url)
-        # except Exception as e:
-        #     print(e)
-        #     break
-
+        # 先頭1ページ分のみ収集のためコメント化
         # # 次の20件へのリンクを取得
-        # soup2 = BeautifulSoup(res2, "html.parser")
-        # ln = soup2.find("a", attrs={"class": "page-move__target--next"})
-        ln = soup.find("a", attrs={"class": "c-pagination__arrow--next"})
-        if ln == None:
-            # 最終ページに到達したら終了
-            break
-        else:
-            kuchikomipage_url = urljoin(url, ln.attrs['href'])
-            time.sleep(5)
+        # ln = soup.find("a", attrs={"class": "c-pagination__arrow--next"})
+        # if ln == None:
+        #     # 最終ページに到達したら終了
+        #     break
+        # else:
+        #     kuchikomipage_url = urljoin(url, ln.attrs['href'])
+        #     time.sleep(1)
+        break
 
     return kuchikomiurl_list
 

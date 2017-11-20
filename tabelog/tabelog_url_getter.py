@@ -6,7 +6,6 @@ import time
 import csv
 from bs4 import BeautifulSoup
 import urllib.request as req
-from urllib.parse import urljoin
 
 ################################################################
 # 関数定義
@@ -26,12 +25,8 @@ def get_shopurl_list(url):
             shopurl_list.append(shopurl)
             print(shopurl)
 
-        # 次の20件ページを取得する
-        res2 = req.urlopen(url)
         # 次の20件へのリンクを取得
-        soup2 = BeautifulSoup(res2, "html.parser")
-        #ln = soup2.find("a", attrs={"class": "page-move__target--next"})
-        ln = soup2.find("a", attrs={"class": "c-pagination__arrow--next"})
+        ln = soup.find("a", attrs={"class": "c-pagination__arrow--next"})
         if ln == None:
             # 最終ページに到達したら終了
             break
@@ -49,16 +44,46 @@ if __name__ == "__main__":
     pgname = args[0]
     # 一覧ページの1ページ目
     dir = args[1]
+    url = args[2]
 
-    filename = "area_urllist.txt"
+    # filename = "area_urllist.txt"
+    #
+    # f = open("./" + dir + "/" + filename, "r")
+    # lines = f.readlines()
+    # f.close()
 
-    f = open("./" + dir + "/" + filename, "r")
-    lines = f.readlines()
-    f.close()
+    url12 = url.replace("LstCos=0&LstCosT=1", "LstCos=1&LstCosT=2")
+    url23 = url.replace("LstCos=0&LstCosT=1", "LstCos=2&LstCosT=3")
+    url34 = url.replace("LstCos=0&LstCosT=1", "LstCos=3&LstCosT=4")
+    url45 = url.replace("LstCos=0&LstCosT=1", "LstCos=4&LstCosT=5")
+    url56 = url.replace("LstCos=0&LstCosT=1", "LstCos=5&LstCosT=6")
+    url67 = url.replace("LstCos=0&LstCosT=1", "LstCos=6&LstCosT=7")
+    url78 = url.replace("LstCos=0&LstCosT=1", "LstCos=7&LstCosT=8")
+    url89 = url.replace("LstCos=0&LstCosT=1", "LstCos=8&LstCosT=9")
+    url910 = url.replace("LstCos=0&LstCosT=1", "LstCos=9&LstCosT=10")
+    url1011 = url.replace("LstCos=0&LstCosT=1", "LstCos=10&LstCosT=11")
+    url1112 = url.replace("LstCos=0&LstCosT=1", "LstCos=11&LstCosT=0")
 
-    for url in lines:
+    lines = []
+    lines.append(url)
+    lines.append(url12)
+    lines.append(url23)
+    lines.append(url34)
+    lines.append(url45)
+    lines.append(url56)
+    lines.append(url67)
+    lines.append(url78)
+    lines.append(url89)
+    lines.append(url910)
+    lines.append(url1011)
+    lines.append(url1112)
+
+    for line in lines:
+        print(line)
+
+    for l in lines:
         # 店舗URL全件取得
-        shopurl_list = get_shopurl_list(url)
+        shopurl_list = get_shopurl_list(l)
 
         # 店舗URLをファイルへ出力
         with open(dir + '/shopurl_list.txt', 'a') as c:

@@ -11,7 +11,8 @@ def get_html(url):
 if __name__ == "__main__":
     args = sys.argv
     dir = args[1]
-    with open(dir + "/shopurl_list.csv", "r") as c:
+    #with open(dir + "/shopurl_list.csv", "r") as c:
+    with open(dir + "/shopurl_list.txt", "r") as c:
         cr = csv.reader(c)
         for c in cr:
             for url in c:
