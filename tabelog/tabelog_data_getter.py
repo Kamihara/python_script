@@ -47,6 +47,17 @@ class TabelogDataGetter:
         json_dict = json.loads(json_str)
         return json_dict['geo']['longitude']
 
+    def get_dish_images_count(self):
+        li = [s for s in soup.select(".rstdtl-navi__sublist-item-genre") if list(s.children)[0] in targets]
+        dish = int(li[2].select("em")[0].text)
+        return dish
+
+    def get_drink_images_count(self):
+        li = [s for s in soup.select(".rstdtl-navi__sublist-item-genre") if list(s.children)[0] in targets]
+        drink = int(li[3].select("em")[0].text)
+        return drink
+
+
     def get_rstinfo(self, search_word):
 
         # 基本情報のテーブルを取得
@@ -75,7 +86,7 @@ class TabelogDataGetter:
             return None
 
         element = elements[0]
-        return element.get_text().strip().replace('\n','')
+        return element.get_text().strip().replace('\n','').replace('\t','')
 
 
 if __name__ == "__main__":
@@ -306,16 +317,30 @@ if __name__ == "__main__":
             # genre_oaiso_s
             l.append("")
 
-            # shop_score
-            shop_score = html.get_shop_score()
-            l.append(shop_score.replace('-', ''))
+            # photo_shop
+            l.append("")
 
-            # shop_lunch_score
-            shop_lunch_score = html.get_shop_lunch_score()
-            l.append(shop_lunch_score.replace('-', ''))
+            # photo_food
+            l.append("")
 
-            # shop_dinner_score
-            shop_dinner_score = html.get_shop_dinner_score()
-            l.append(shop_dinner_score.replace('-', ''))
+            # dish_images_count
+            dish_images_count = html.get_dish_images_count()
+            l.append(dish_images_count)
+
+            # drink_images_count
+            drink_images_count = html.get_drink_images_count()
+            l.append(drink_images_count)
+
+            # review
+            l.append("")
+
+            # review_status
+            l.append("")
+
+            # user_average_score
+            l.append("")
+
+            # shop_average_score
+            l.append("")
 
             cw.writerow(l)

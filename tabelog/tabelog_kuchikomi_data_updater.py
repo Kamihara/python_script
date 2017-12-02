@@ -84,17 +84,15 @@ if __name__ == "__main__":
     dir = args[1]
     kuchikomi_info = dir + '/kuchikomi_info.csv'
 
-    with open(kuchikomi, 'r') as c:
+    with open(kuchikomi_info, 'r') as c:
         f = open(dir + '/tabelog_kuchikomi_info_update.sql', 'w')
         cr = csv.reader(c, delimiter='\t')
 
         for row in cr:
-            sql = "update tabelog_shop_review set URL = " + "\'" + row[51] + "\'" \
-                    ", latitude = " + row[48] + \
-                    ", longitude = " + row[49] + \
-                    ", tel = " + "\'" + row[45] + "\'" + \
+            sql = "update tabelog_shop_review set shopURL = " + "\'" + row[24] + "\'" \
+                    ", reviewURL = " + "\'" + row[25] + "\'" \
                     " where shop_name = " + "\'" + row[0] + "\' " \
-                    " and address = " + "\'" + row[4] + "\' " ";\n"
+                    " and kuchikomi_title = " + "\'" + row[1] + "\' " ";\n"
 
             print(sql)
             f.write(sql)

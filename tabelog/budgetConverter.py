@@ -9,7 +9,7 @@ if __name__ == "__main__":
     data = []
 
     # with open('/Users/YoshitoKamihara/Documents/aiit/PBL/dev/analysis/shop_analysis_budget.tsv', 'r') as t:
-    with open('/Users/YoshitoKamihara/Documents/aiit/PBL/dev/analysis/shop_analysis_budget_20171106.tsv', 'r') as t:
+    with open('/Users/YoshitoKamihara/Documents/aiit/PBL/dev/analysis/shop_analysis_budget20171128.tsv', 'r') as t:
         cr = csv.reader(t, delimiter='\t')
         for row in cr:
             dict = {"budget_from_shop_night_min": "null",
@@ -21,6 +21,10 @@ if __name__ == "__main__":
                     "budget_from_user_lunch_min": "null",
                     "budget_from_user_lunch_max": "null",
                     "id": 0}
+
+            print(row[2])
+            # if row[2] in (53643, 68965):
+            #     continue
 
             # 店舗予算
             if row[0] == "no data":
@@ -91,6 +95,9 @@ if __name__ == "__main__":
                             dict["budget_from_shop_lunch_max"] = "null"
                 except:
                     pass
+
+            if row[2] in (53643, 68965):
+                continue
 
             # ユーザ予算
             if row[1] == '':
@@ -197,7 +204,7 @@ if __name__ == "__main__":
 
     header = data[0].keys()
 
-    with open('./budgetConvert_20171106.tsv', 'a') as t:
+    with open('./budgetConvert_20171128.tsv', 'w') as t:
         cw = csv.DictWriter(t, header, delimiter='\t')
         header_row = {k: k for k in header}
         cw.writerow(header_row)
@@ -205,10 +212,12 @@ if __name__ == "__main__":
         for row in data:
             cw.writerow(row)
 
-    with open('./budgetConvert_20171106.tsv', 'r') as t:
+    with open('./budgetConvert_20171128.tsv', 'r') as t:
         cr = csv.reader(t, delimiter='\t')
         for row in cr:
-            sql = "update tabelog_shop_info set budget_from_shop_night_min = " + row[0] + \
+
+            # sql = "update tabelog_shop_info set budget_from_shop_night_min = " + row[0] + \
+            sql = "update tabelog_shop_info_all set budget_from_shop_night_min = " + row[0] + \
                   ", budget_from_shop_night_max = " + row[1] + \
                   ", budget_from_shop_lunch_min = " + row[2] + \
                   ", budget_from_shop_lunch_max = " + row[3] + \
@@ -219,5 +228,5 @@ if __name__ == "__main__":
                   " where id = " + row[8] + ";\n"
 
             print(sql)
-            f = open('./budgetConvert_20171106.sql', 'a')
+            f = open('./budgetConvert_20171128.sql', 'a')
             f.write(sql)
