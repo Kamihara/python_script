@@ -46,13 +46,13 @@ class TabelogDataGetter:
         return lng
 
     def get_dish_images_count(self):
-        li = [s for s in self.soup.select(".rstdtl-navi__sublist-item-genre") if list(s.children)[0] in targets]
-        dish = int(li[2].select("em")[0].text)
+        d = self.soup.select(".rstdtl-navi__sublist-item-genre")[5]
+        dish = int(d.select("em")[0].text)
         return dish
 
     def get_drink_images_count(self):
-        li = [s for s in self.soup.select(".rstdtl-navi__sublist-item-genre") if list(s.children)[0] in targets]
-        drink = int(li[3].select("em")[0].text)
+        d = self.soup.select(".rstdtl-navi__sublist-item-genre")[6]
+        drink = int(d.select("em")[0].text)
         return drink
 
 
