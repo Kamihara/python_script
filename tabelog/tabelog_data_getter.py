@@ -36,24 +36,22 @@ class TabelogDataGetter:
         return self.__get_text(".rdheader-rating__time-icon--lunch").replace('昼の点数：','')
 
     def get_latitude(self):
-        j = self.soup.find("script", attrs={"type": "application/ld+json"})
-        json_str = j.get_text().strip()
-        json_dict = json.loads(json_str)
-        return json_dict['geo']['latitude']
+        mapURL = self.soup.select(".rstinfo-table__map > a > img")[0].attrs['data-original']
+        lat = mapURL.split('&')[4].replace('center=', '').split(',')[0]
+        return lat
 
     def get_longitude(self):
-        j = self.soup.find("script", attrs={"type": "application/ld+json"})
-        json_str = j.get_text().strip()
-        json_dict = json.loads(json_str)
-        return json_dict['geo']['longitude']
+        mapURL = self.soup.select(".rstinfo-table__map > a > img")[0].attrs['data-original']
+        lng = mapURL.split('&')[4].replace('center=', '').split(',')[1]
+        return lng
 
     def get_dish_images_count(self):
-        li = [s for s in soup.select(".rstdtl-navi__sublist-item-genre") if list(s.children)[0] in targets]
+        li = [s for s in self.soup.select(".rstdtl-navi__sublist-item-genre") if list(s.children)[0] in targets]
         dish = int(li[2].select("em")[0].text)
         return dish
 
     def get_drink_images_count(self):
-        li = [s for s in soup.select(".rstdtl-navi__sublist-item-genre") if list(s.children)[0] in targets]
+        li = [s for s in self.soup.select(".rstdtl-navi__sublist-item-genre") if list(s.children)[0] in targets]
         drink = int(li[3].select("em")[0].text)
         return drink
 
@@ -335,12 +333,6 @@ if __name__ == "__main__":
             l.append("")
 
             # review_status
-            l.append("")
-
-            # user_average_score
-            l.append("")
-
-            # shop_average_score
             l.append("")
 
             cw.writerow(l)
